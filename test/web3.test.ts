@@ -116,7 +116,7 @@ describe('Erc20 기능 Web3.js 검사', function () {
     it('approve는 컨트랙트의 approve함수를 사용하여 spender 주소로 amount(wei 단위)만큼 토큰을 승인해야 합니다.', async function () {
       await approve(newAddress, Number(web3.utils.toWei('10', 'ether')));
       const allowance = await getContract()
-        .methods.allowance((await getOwner()).address, newAddress)
+        .methods.allowance((await getOwner()).address, newAddress)   // 여기서 newAddress는 DApp이 될 수 있음 
         .call();
       if (allowance === null || allowance === undefined) {
         throw new Error('allowance returned null or undefined');
