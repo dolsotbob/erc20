@@ -35,30 +35,29 @@ export const getContract = () => {
 
 export const totalSupply = async () => {
   // Todo: MyToken의 totalSupply 리턴 값을 리턴합니다.
-  const supply = await getContract().methods.totalSupply().call();
-  return BigInt(supply);
+  return await getContract().methods.totalSupply().call();
 };
 
 export const balanceOf = async (address: string) => {
   // Todo: 인자 address의 balanceOf 리턴 값을 리턴합니다.
-  const balance = await getContract().methods.balanceOf(address).call();
-  const decimals = await getContract().methods.decimals().call();
-  return Number(balance) / 10 ** Number(decimals);
+  return await getContract().methods.balanceOf(address).call();
 };
 
 export const transfer = async (from: string, to: string, amount: number) => {
   // Todo: transfer함수는 컨트랙트의 transfer 함수를 사용해서 from 주소에서 to 주소로 amount(wei 단위)의 토큰을 전송해야 하며, 그 값을 리턴해야 합니다.
-  return await getContract().methods.transfer(to, amount).send({ from });
+  // from 에 owner 쓸 수 있는가?  
+  return await getContract().methods.transfer(to, amount).send({ from: from });
 };
 
 export const approve = async (spender: string, amount: number) => {
   //Todo: approve함수는 컨트랙트의 approve 함수를 호출하여 호출하는 주소에서 spender 주소로 amount(wei 단위)만큼 토큰의 권한을 승인해야 하며, 그을 리턴해야 합니다.
   const address = (await getOwner()).address;
-  return await getContract().methods.approve(spender, amount).send({ from: address });
+  return await getContract().methods.approve(spender, amount).send({ from: (await getOwner()).address });
 };
 
 export const allowance = async (owner: string, spender: string) => {
   //Todo: allowance함수는 컨트랙트의 allowance 함수를 사용하여 owner가 spender에게 부여한 토큰의 양을 리턴해야 합니다.
+  // 게터 함수라서 call 사용 
   return await getContract().methods.allowance(owner, spender).call();
 };
 
@@ -68,7 +67,6 @@ export const transferFrom = async (
   to: string,
   amount: number
 ) => {
-  //Todo: transferFrom함수는 컨트랙트의 transferFrom 함수를 사용하여 
-  // 승인을 받은 spender가 승인한 from 주소에서 to 주소로 amount(wei 단위)만큼 토큰을 전송해야 하며, 그을 리턴해야 합니다.
+  //Todo: transferFrom함수는 컨트랙트의 transferFrom 함수를 사용하여 승인을 받은 spender가 승인한 from 주소에서 to 주소로 amount(wei 단위)만큼 토큰을 전송해야 하며, 그을 리턴해야 합니다.
   return await getContract().methods.transferFrom(from, to, amount).send({ from: spender });
 };
